@@ -1,7 +1,4 @@
 return {
-  require("lazyvim.plugins.extras.custom.mason"),
-  require("lazyvim.plugins.extras.custom.which-key"),
-  require("lazyvim.plugins.extras.custom.flash"),
   require("lazyvim.plugins.extras.custom.snacks"),
   require("lazyvim.plugins.extras.custom.bufferline"),
   require("lazyvim.plugins.extras.custom.blink-cmp"),
