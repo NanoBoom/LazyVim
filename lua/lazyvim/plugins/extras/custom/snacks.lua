@@ -30,25 +30,6 @@ end
 return {
   "snacks.nvim",
   optional = true,
-  keys = {
-    {
-      "<C-Space>",
-      function()
-        Snacks.terminal(nil, { cwd = LazyVim.root() })
-      end,
-      mode = "n",
-      desc = "Terminal (Root Dir)",
-    },
-    {
-      "<C-Space>",
-      "<cmd>close<cr>",
-      mode = "t",
-      silent = true,
-      noremap = true,
-      desc = "Hide Terminal",
-    },
-  },
-
   opts = function(_, opts)
     local snacksConfig = {
 
