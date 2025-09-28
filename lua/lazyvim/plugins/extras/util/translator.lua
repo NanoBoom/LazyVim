@@ -2,6 +2,9 @@ return {
   {
     "doodleEsc/translator.nvim",
     event = "VeryLazy",
+    init = function()
+      LazyVim.env.load()
+    end,
     keys = {
       { "<leader>ts", ":Translate<CR>", mode = "v", desc = "Translate" },
     },
