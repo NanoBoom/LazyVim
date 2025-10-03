@@ -1,6 +1,9 @@
 return {
   {
     "coder/claudecode.nvim",
+    init = function()
+      LazyVim.env.load()
+    end,
     dependencies = { "folke/snacks.nvim" },
     config = true,
     keys = {
@@ -22,50 +25,57 @@ return {
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },
 
-    opts = {
-      -- Server Configuration
-      port_range = { min = 10000, max = 65535 },
-      auto_start = true,
-      log_level = "info", -- "trace", "debug", "info", "warn", "error"
-      terminal_cmd = nil, -- Custom terminal command (default: "claude")
-      -- For local installations: "~/.claude/local/claude"
-      -- For native binary: use output from 'which claude'
+    opts = function()
+      local claude = LazyVim.env.get("CLAUDE")
+      if not claude or claude == "" then
+        claude = "claude"
+      end
 
-      -- Send/Focus Behavior
-      -- When true, successful sends will focus the Claude terminal if already connected
-      focus_after_send = true,
+      return {
+        -- Server Configuration
+        port_range = { min = 10000, max = 65535 },
+        auto_start = true,
+        log_level = "info", -- "trace", "debug", "info", "warn", "error"
+        terminal_cmd = claude, -- Custom terminal command (default: "claude")
+        -- For local installations: "~/.claude/local/claude"
+        -- For native binary: use output from 'which claude'
 
-      -- Selection Tracking
-      track_selection = true,
-      visual_demotion_delay_ms = 50,
+        -- Send/Focus Behavior
+        -- When true, successful sends will focus the Claude terminal if already connected
+        focus_after_send = true,
 
-      -- Terminal Configuration
-      terminal = {
-        split_side = "right", -- "left" or "right"
-        split_width_percentage = 0.34,
-        provider = "auto", -- "auto", "snacks", "native", "external", or custom provider table
-        auto_close = true,
-        snacks_win_opts = {}, -- Opts to pass to `Snacks.terminal.open()` - see Floating Window section below
+        -- Selection Tracking
+        track_selection = true,
+        visual_demotion_delay_ms = 50,
 
-        -- Provider-specific options
-        provider_opts = {
-          -- Command for external terminal provider. Can be:
-          -- 1. String with %s placeholder: "alacritty -e %s" (backward compatible)
-          -- 2. String with two %s placeholders: "alacritty --working-directory %s -e %s" (cwd, command)
-          -- 3. Function returning command: function(cmd, env) return "alacritty -e " .. cmd end
-          external_terminal_cmd = nil,
+        -- Terminal Configuration
+        terminal = {
+          split_side = "right", -- "left" or "right"
+          split_width_percentage = 0.34,
+          provider = "auto", -- "auto", "snacks", "native", "external", or custom provider table
+          auto_close = true,
+          snacks_win_opts = {}, -- Opts to pass to `Snacks.terminal.open()` - see Floating Window section below
+
+          -- Provider-specific options
+          provider_opts = {
+            -- Command for external terminal provider. Can be:
+            -- 1. String with %s placeholder: "alacritty -e %s" (backward compatible)
+            -- 2. String with two %s placeholders: "alacritty --working-directory %s -e %s" (cwd, command)
+            -- 3. Function returning command: function(cmd, env) return "alacritty -e " .. cmd end
+            external_terminal_cmd = nil,
+          },
         },
-      },
 
-      -- Diff Integration
-      diff_opts = {
-        layout = "vertical",
-        open_in_new_tab = false, -- Open diff in a new tab (false = use current tab)
-        keep_terminal_focus = false, -- If true, moves focus back to terminal after diff opens
-        hide_terminal_in_new_tab = false, -- If true and opening in a new tab, do not show Claude terminal there
-        on_new_file_reject = "keep_empty", -- "keep_empty" leaves an empty buffer; "close_window" closes the placeholder split
-      },
-    },
+        -- Diff Integration
+        diff_opts = {
+          layout = "vertical",
+          open_in_new_tab = false, -- Open diff in a new tab (false = use current tab)
+          keep_terminal_focus = false, -- If true, moves focus back to terminal after diff opens
+          hide_terminal_in_new_tab = false, -- If true and opening in a new tab, do not show Claude terminal there
+          on_new_file_reject = "keep_empty", -- "keep_empty" leaves an empty buffer; "close_window" closes the placeholder split
+        },
+      }
+    end,
   },
 
   {
