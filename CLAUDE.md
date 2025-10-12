@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## 项目概览
 
 LazyVim 是基于 lazy.nvim 构建的 Neovim 配置框架，旨在提供开箱即用的 IDE 体验。它不是简单的配置文件集合，而是一个可扩展的插件分发系统。核心特性包括：预配置的插件生态、模块化的 extras 系统、智能的配置加载机制。这是 LazyVim 的核心代码库（不是用户配置），用户通过 starter 模板使用它。
@@ -45,41 +41,45 @@ selene lua/
 ./scripts/test tests/dd_spec.lua
 ```
 
-## 代码架构
+## 工具使用策略
 
-### 插件加载机制
-LazyVim 使用 lazy.nvim 的延迟加载机制。插件分为：
-1. **核心插件**（`lua/lazyvim/plugins/*.lua`）：coding, editor, lsp, treesitter, ui, formatting, linting
-2. **Extras**（`lua/lazyvim/plugins/extras/`）：按功能分类的可选模块
-   - `lang/*` - 语言支持（go, rust, python, typescript 等）
-   - `ai/*` - AI 工具集成（copilot, codeium, tabnine 等）
-   - `editor/*` - 编辑器增强（telescope, neo-tree, leap 等）
-   - `util/*` - 实用工具（project, rest, startuptime 等）
+### 工具选择原则
 
-### 配置系统
-配置通过 `lua/lazyvim/config/` 加载，顺序：
-1. LazyVim 默认配置先加载
-2. 用户自定义配置覆盖（在用户的 `~/.config/nvim/lua/config/`）
+**优先使用专用工具（精准安全）**
 
-关键文件：
-- `autocmds.lua` - 自动命令（highlight yank, resize splits, 文件类型特定行为等）
-- `keymaps.lua` - 全局按键映射
-- `options.lua` - Vim 选项设置
+- 代码搜索：Grep（支持正则、上下文、行号）
+- 文件查找：Glob（支持通配符模式）
+- 文件读取：Read（支持行范围、语法高亮）
+- 文件编辑：Edit（精准替换、支持正则）
 
-### Util 模块
-`lua/lazyvim/util/` 提供核心工具函数：
-- `format.lua` - 格式化逻辑
-- `pick.lua` - 文件选择器抽象（支持 telescope/fzf-lua）
-- `terminal.lua` - 终端管理
-- `root.lua` - 项目根目录检测
-- `lsp.lua` - LSP 工具函数
-- `extras.lua` - Extras 管理
+**辅助使用 CLI 命令（高效批量）**
 
-### 注意事项
-- 此仓库是 LazyVim 核心，**不应直接使用**。用户应使用 [LazyVim/starter](https://github.com/LazyVim/starter) 模板
-- 修改核心插件配置时，确保向后兼容性
-- 新增 extras 时遵循现有命名和结构规范
-- LSP keymaps 在 `lua/lazyvim/plugins/lsp/keymaps.lua` 中集中管理
+- 项目结构：`tree -L 2` 快速预览
+- JSON 解析：`jq '.key' file.json` 提取数据
+- 批量重构：先用工具分析，确认后用 CLI 执行
+
+### 批量操作流程
+
+对于需要修改多个文件的重构任务：
+
+1. **探索阶段** - 使用 Grep 找到所有匹配项
+2. **分析阶段** - 使用 Read 确认需要修改的内容
+3. **执行阶段** - 根据规模选择：
+   - ≤5 个文件：使用 Edit 工具逐个修改（精准控制）
+   - >5 个文件：与用户确认后使用 CLI 批量操作
+
+### 常用 CLI 命令
+
+```bash
+# 批量重命名/替换（需确认）
+rg -l "pattern" | xargs sed -i 's/old/new/g'
+
+# 统计代码行数
+fd -e ts -e tsx | xargs wc -l
+
+# 查找大文件
+fd -e ts -e tsx -x wc -l {} \; | sort -rn | head -10
+```
 
 ---
 
