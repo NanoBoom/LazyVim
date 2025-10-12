@@ -10,3 +10,4 @@ tt.*
 .ctx-tool-tracking.json
 .claude/
 *PRP*/
+.mcp.json
