@@ -47,32 +47,4 @@ return {
       language = "zh", -- default language
     },
   },
-
-  {
-    "snacks.nvim",
-    optional = true,
-    dependencies = {
-      "doodleEsc/fortune.nvim",
-    },
-    opts = function(_, opts)
-      local fortune = require("fortune").get_fortune()
-      for i, item in ipairs(fortune) do
-        local padding = { 0, 0 }
-        local align = "left"
-        local text = { item, hl = "NonText" }
-        if i == 1 then
-          padding = { 1, 0 }
-        end
-        if i == 4 then
-          align = "right"
-        end
-        local text_section = {
-          padding = padding,
-          text = text,
-          align = align,
-        }
-        table.insert(opts.dashboard.sections, text_section)
-      end
-    end,
-  },
 }
