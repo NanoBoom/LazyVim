@@ -1,7 +1,6 @@
 return {
   {
     "NanoBoom/claudecode.nvim",
-    dev = true,
     opts = {
       workspace_folders_fn = function(basename)
         return {
